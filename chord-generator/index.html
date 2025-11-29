@@ -202,7 +202,7 @@
     </div>
 
     <div>
-      <h2>Strings (low E to high e)</h2>
+      <h2>Strings (high e to low E)</h2>
       <div id="stringInputs"></div>
       <p class="help">Fret: 0=open, X=muted, 1-20=fret number</p>
     </div>
@@ -243,21 +243,21 @@
     const ctx = canvas.getContext('2d');
 
     // String data: [fret, interval] - fret can be 'x', '0', or number
-    // Order: low E, A, D, G, B, high e (top to bottom visually)
+    // Order: high e, B, G, D, A, low E (top to bottom visually - matching how we draw)
     let strings = [
-      { fret: 'x', interval: '' },
-      { fret: '2', interval: '1' },
-      { fret: '3', interval: '5♭' },
-      { fret: '2', interval: '7♭' },
-      { fret: '3', interval: '3♭' },
-      { fret: 'x', interval: '' }
+      { fret: 'x', interval: '' },  // high e (top)
+      { fret: '3', interval: '3♭' }, // B
+      { fret: '2', interval: '7♭' }, // G
+      { fret: '3', interval: '5♭' }, // D
+      { fret: '2', interval: '1' },  // A
+      { fret: 'x', interval: '' }   // low E (bottom)
     ];
 
     let lastFocusedInterval = null;
 
     function createStringInputs() {
       const container = document.getElementById('stringInputs');
-      const stringNames = ['E', 'A', 'D', 'G', 'B', 'e'];
+      const stringNames = ['e', 'B', 'G', 'D', 'A', 'E'];
 
       container.innerHTML = strings.map((s, i) => `
         <div class="string-row">
@@ -363,9 +363,8 @@
 
       // Draw notes and markers
       strings.forEach((s, i) => {
-        // Reverse visual order: low E at bottom, high e at top
-        const visualIndex = 5 - i;
-        const y = topPadding + visualIndex * stringSpacing;
+        // Direct mapping: array index matches visual position (top to bottom)
+        const y = topPadding + i * stringSpacing;
 
         if (s.fret === 'x') {
           // X marker on the left
