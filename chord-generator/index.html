@@ -182,6 +182,14 @@
       color: var(--color-text-muted);
       margin-top: var(--spacing-xs);
     }
+    .feedback-message {
+      color: var(--color-accent);
+      font-size: var(--font-size-sm);
+      text-align: center;
+      margin-top: var(--spacing-xs);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
   </style>
 </head>
 <body>
@@ -230,7 +238,9 @@
       <button class="btn btn-primary" onclick="downloadPNG()">Download PNG</button>
       <button class="btn btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
       <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+      <div id="copyFeedback" class="feedback-message"></div>
     </div>
+
   </div>
 
   <div class="panel preview">
@@ -418,15 +428,28 @@
     }
 
     async function copyToClipboard() {
+      const feedback = document.getElementById('copyFeedback');
+
       try {
         const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
         await navigator.clipboard.write([
           new ClipboardItem({ 'image/png': blob })
         ]);
-        alert('Copied to clipboard!');
+
+        // Success feedback
+        feedback.textContent = 'Copied to clipboard!';
+        feedback.style.opacity = '1';
+
       } catch (err) {
         console.error('Failed to copy:', err);
-        alert('Failed to copy. Try downloading instead.');
+
+        // Error feedback
+        feedback.textContent = 'Failed to copy. Try downloading instead.';
+        feedback.style.opacity = '1';
+      } finally {
+        setTimeout(() => {
+          feedback.style.opacity = '0';
+        }, 1000);
       }
     }
 
