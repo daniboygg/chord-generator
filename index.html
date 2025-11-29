@@ -404,7 +404,13 @@
         document.getElementById('numFrets').addEventListener('input', draw);
         document.getElementById('chordName').addEventListener('input', draw);
 
-        // Initialize
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            createStringInputs();
+            draw();
+        });
+
+        // Also initialize immediately for faster rendering
         createStringInputs();
         draw();
     </script>
